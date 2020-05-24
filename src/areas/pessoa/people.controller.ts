@@ -18,13 +18,20 @@ export class PeopleController {
   }
 
   @Post('/')
-  public async createPerson(@Body() body: PeopleModel) {
-    return await this.service.createPerson(body);
+  public async createPerson(@Body() body) {
+    let person = new PeopleModel(body);
+    return await this.service.createPerson(person);
   }
 
   @Put('/:id')
-  public async updatePerson(@Body() body: PeopleModel, @Param('id') id: string) {
-    body._id = id;
-    return await this.service.updatePerson(body);
+  public async updatePerson(@Body() body, @Param('id') id: string) {
+    let person = new PeopleModel({...body, id});
+
+    let personResult: PeopleModel | undefined = await this.service.updatePersonAndGetResult(person);
+
+    if(personResult) {
+      return personResult
+    }
+    return {result: 'error', msg: `There is no recorded person to id: ${id}`}
   }
 }

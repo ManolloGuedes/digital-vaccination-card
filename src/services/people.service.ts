@@ -19,14 +19,29 @@ export class PeopleService {
     return await this.collection.insertOne(person);
   }
 
-  async updatePerson(person: PeopleModel) {
+  private async updatePerson(person: PeopleModel) {
     return await this.collection.updateOne({
       _id: ObjectId(person._id)
-    }, {
-      name: person.name,
-      birthday: person.birthday,
-      email: person.email,
-      vaccines: person.vaccines
+    }, { $set: {
+        name: person.name,
+        birthday: person.birthday,
+        email: person.email,
+        vaccines: person.vaccines
+      }
     });
+  }
+
+  async updatePersonAndGetResult(person: PeopleModel): Promise<PeopleModel | undefined> {
+    try {
+      let result = await this.updatePerson(person);
+
+      console.log(result);
+
+      if(result.modifiedCount == 1) {
+        return await this.getPerson(person._id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
