@@ -1,11 +1,11 @@
 import { Controller, Get, Param, Post, Body, Put } from 'https://deno.land/x/alosaur/src/mod.ts';
-import { PeopleService } from '../../services/people.service.ts';
-import { PeopleModel } from '../../models/people.model.ts';
+import { PersonService } from '../../services/person.service.ts';
+import { PersonModel } from '../../models/person.model.ts';
 
-@Controller('/people')
-export class PeopleController {
+@Controller('/person')
+export class PersonController {
 
-  constructor(private service: PeopleService){};
+  constructor(private service: PersonService){};
 
   @Get('/:id')
   public async getPerson(@Param('id') id: string) {
@@ -19,15 +19,15 @@ export class PeopleController {
 
   @Post('/')
   public async createPerson(@Body() body) {
-    let person = new PeopleModel(body);
+    let person = new PersonModel(body);
     return await this.service.createPerson(person);
   }
 
   @Put('/:id')
   public async updatePerson(@Body() body, @Param('id') id: string) {
-    let person = new PeopleModel({...body, id});
+    let person = new PersonModel({...body, id});
 
-    let personResult: PeopleModel | undefined = await this.service.updatePersonAndGetResult(person);
+    let personResult: PersonModel | undefined = await this.service.updatePersonAndGetResult(person);
 
     if(personResult) {
       return personResult

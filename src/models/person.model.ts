@@ -1,7 +1,7 @@
 import { VaccineRecordModel } from './vaccine-record.model.ts';
 import { MongoSchema } from './abstracts/mongo.schema.ts';
 
-export class PeopleModel extends MongoSchema {
+export class PersonModel extends MongoSchema {
   _id: string;
   name: string;
   birthday: Date;

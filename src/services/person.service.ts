@@ -1,13 +1,13 @@
 import { db, ObjectId } from '../config/mongo.db.ts';
 import { Injectable } from 'https://deno.land/x/alosaur/src/mod.ts';
-import { PeopleModel } from '../models/people.model.ts';
+import { PersonModel } from '../models/person.model.ts';
 
 @Injectable()
-export class PeopleService {
-  constructor(private collection: any = db.collection('people')){
+export class PersonService {
+  constructor(private collection: any = db.collection('person')){
   }
 
-  async getPeople(): Promise<Array<PeopleModel>> {
+  async getPeople(): Promise<Array<PersonModel>> {
     return await this.collection.find({})
   }
 
@@ -15,11 +15,11 @@ export class PeopleService {
     return await this.collection.findOne({ _id: ObjectId(id) });
   }
 
-  async createPerson(person: PeopleModel) {
+  async createPerson(person: PersonModel) {
     return await this.collection.insertOne(person);
   }
 
-  private async updatePerson(person: PeopleModel) {
+  private async updatePerson(person: PersonModel) {
     return await this.collection.updateOne({
       _id: ObjectId(person._id)
     }, { $set: {
@@ -31,7 +31,7 @@ export class PeopleService {
     });
   }
 
-  async updatePersonAndGetResult(person: PeopleModel): Promise<PeopleModel | undefined> {
+  async updatePersonAndGetResult(person: PersonModel): Promise<PersonModel | undefined> {
     try {
       let result = await this.updatePerson(person);
 
