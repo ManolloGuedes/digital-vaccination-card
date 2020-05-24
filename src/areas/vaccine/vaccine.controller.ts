@@ -28,7 +28,7 @@ export class VaccineController {
   public async updateVaccine(@Body() body, @Param('id') id: string) {
     let vaccine = new VaccineModel({...body, id});
     
-    let vaccineResult: VaccineModel | {} = await this.service.updateVaccineAndGetResult(vaccine);
+    let vaccineResult: VaccineModel | undefined = await this.service.updateVaccineAndGetResult(vaccine);
 
     if(vaccineResult) {
       return vaccineResult;

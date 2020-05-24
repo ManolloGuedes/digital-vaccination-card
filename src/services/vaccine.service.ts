@@ -27,13 +27,15 @@ export class VaccineService {
     });
   }
 
-  async updateVaccineAndGetResult(vaccine: VaccineModel) {
-   let result = await this.updateVaccine(vaccine);
+  async updateVaccineAndGetResult(vaccine: VaccineModel): Promise<VaccineModel | undefined> {
+    try {
+      let result = await this.updateVaccine(vaccine);
 
-    if(result.modifiedCount == 1) {
-      return await this.getVaccine(vaccine._id);
+      if(result.modifiedCount == 1) {
+        return await this.getVaccine(vaccine._id);
+      }
+    } catch (error) {
+      console.error(error);
     }
-
-    return {}
   }
 }
