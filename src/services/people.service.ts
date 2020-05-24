@@ -7,7 +7,7 @@ export class PeopleService {
   constructor(private collection: any = db.collection('people')){
   }
 
-  async getPeople(): Promise<PeopleModel> {
+  async getPeople(): Promise<Array<PeopleModel>> {
     return await this.collection.find({})
   }
 
@@ -27,8 +27,6 @@ export class PeopleService {
       birthday: person.birthday,
       email: person.email,
       vaccines: person.vaccines
-    }, {
-      upsert: true
     });
   }
 }
