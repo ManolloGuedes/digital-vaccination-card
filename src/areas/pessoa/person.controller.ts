@@ -27,29 +27,39 @@ export class PersonController extends ControllerAbstract {
     try {
       return await this.service.createPerson(person);
     } catch (error) {
-      let response: Object;
-
-      if(error instanceof ValidationBodyException) {
-        response = this.handleBodyValidationError(person, error);
-      } else {
-        response = {
-          result: 'error'
-        }
-      }
-      
-      return response;
+      return this.handleError(error, person);
     }
+  }
+
+  private handleError(error: any, person: PersonModel) {
+    let response: Object;
+
+    if (error instanceof ValidationBodyException) {
+      response = this.handleBodyValidationError(person, error);
+    }
+    else {
+      response = {
+        result: 'error',
+        message: error.message
+      };
+    }
+
+    return response;
   }
 
   @Put('/:id')
   public async updatePerson(@Body() body, @Param('id') id: string) {
     let person = new PersonModel({...body, id});
 
-    let personResult: PersonModel | undefined = await this.service.updatePersonAndGetResult(person);
+    try {
+      let personResult: PersonModel | undefined = await this.service.updatePersonAndGetResult(person);
 
-    if(personResult) {
-      return personResult
+      if(personResult) {
+        return personResult
+      }
+      return {result: 'error', msg: `There is no recorded person to id: ${id}`}
+    } catch (error) {
+      return this.handleError(error, person);
     }
-    return {result: 'error', msg: `There is no recorded person to id: ${id}`}
   }
 }

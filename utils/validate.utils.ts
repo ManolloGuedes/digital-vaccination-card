@@ -8,7 +8,6 @@ class ValidationBodyException extends Error {
 }
 
 const isEmail = (email: string) => {
-  console.log(/\S+@\S+\.\S+/.test(email))
   return /\S+@\S+\.\S+/.test(email);
 }
 

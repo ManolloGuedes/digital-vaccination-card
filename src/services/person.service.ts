@@ -38,13 +38,14 @@ export class PersonService {
 
   async updatePersonAndGetResult(person: PersonModel): Promise<PersonModel | undefined> {
     try {
-      let result = await this.updatePerson(person);
+      let result = await this.validateAndExecuteQuery(person, () =>  this.updatePerson(person));
 
-      if(result.modifiedCount == 1) {
+      if(result['modifiedCount'] == 1) {
         return await this.getPerson(person._id);
       }
     } catch (error) {
       console.error(error);
+      throw error
     }
   }
 
