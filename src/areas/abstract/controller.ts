@@ -2,7 +2,7 @@ import { Validable } from "../../models/interfaces/validable.ts";
 import { ValidationBodyException } from "../../../utils/validate.utils.ts";
 
 export class ControllerAbstract {
-  handleBodyValidationError(element: Validable, error: Error): Object {
+  protected handleBodyValidationError(element: Validable, error: Error): Object {
     let response: Object;
 
     if(error instanceof ValidationBodyException) {
@@ -16,6 +16,22 @@ export class ControllerAbstract {
         result: 'error'
       }
     }
+    return response;
+  }
+
+  protected handleError(error: any, element: Validable) {
+    let response: Object;
+
+    if (error instanceof ValidationBodyException) {
+      response = this.handleBodyValidationError(element, error);
+    }
+    else {
+      response = {
+        result: 'error',
+        message: error.message
+      };
+    }
+
     return response;
   }
 }

@@ -1,11 +1,14 @@
 import { Controller, Get, Param, Post, Body, Put } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { VaccineModel } from '../../models/vaccine.model.ts';
 import { VaccineService } from '../../services/vaccine.service.ts';
+import { ControllerAbstract } from '../abstract/controller.ts';
 
 @Controller('/vaccine')
-export class VaccineController {
+export class VaccineController extends ControllerAbstract{
 
-  constructor(private service: VaccineService){}
+  constructor(private service: VaccineService){
+    super();
+  }
 
   @Get('/')
   public async getVaccines() {
@@ -20,19 +23,26 @@ export class VaccineController {
   @Post('/')
   public async createVaccine(@Body() body) {
     let vaccine = new VaccineModel(body);
-    
-    return this.service.createVaccine(vaccine);
+    try {
+      return await this.service.createVaccine(vaccine);
+    } catch (error) {
+      return this.handleError(error, vaccine);
+    }
   }
 
   @Put('/:id')
   public async updateVaccine(@Body() body, @Param('id') id: string) {
     let vaccine = new VaccineModel({...body, id});
     
-    let vaccineResult: VaccineModel | undefined = await this.service.updateVaccineAndGetResult(vaccine);
+    try {
+      let vaccineResult: VaccineModel | undefined = await this.service.updateVaccineAndGetResult(vaccine);
 
-    if(vaccineResult) {
-      return vaccineResult;
+      if(vaccineResult) {
+        return vaccineResult;
+      }
+      return {result: 'error', msg: `There is no recorded vaccine to id: ${id}`}
+    } catch (error) {
+      return this.handleError(error, vaccine);
     }
-    return {result: 'error', msg: `There is no recorded vaccine to id: ${id}`}
   }
 }

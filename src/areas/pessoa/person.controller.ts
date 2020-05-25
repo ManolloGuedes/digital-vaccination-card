@@ -31,21 +31,6 @@ export class PersonController extends ControllerAbstract {
     }
   }
 
-  private handleError(error: any, person: PersonModel) {
-    let response: Object;
-
-    if (error instanceof ValidationBodyException) {
-      response = this.handleBodyValidationError(person, error);
-    }
-    else {
-      response = {
-        result: 'error',
-        message: error.message
-      };
-    }
-
-    return response;
-  }
 
   @Put('/:id')
   public async updatePerson(@Body() body, @Param('id') id: string) {
