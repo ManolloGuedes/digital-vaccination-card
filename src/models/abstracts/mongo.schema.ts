@@ -9,7 +9,11 @@ export class MongoSchema implements Validable {
   }
 
   validate(): Boolean {
-    return (!this.created_at || this.created_at.getTime() < new Date().getTime())
-    && (!this.updated_at || this.updated_at.getTime() < new Date().getTime());
+    return (!this.created_at || this.created_at.getTime() <= new Date().getTime())
+    && (!this.updated_at || this.updated_at.getTime() <= new Date().getTime());
+  }
+
+  getAcceptableStructure() {
+    return {}
   }
 }

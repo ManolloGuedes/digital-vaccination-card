@@ -1,11 +1,15 @@
 import { Controller, Get, Param, Post, Body, Put } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { PersonService } from '../../services/person.service.ts';
 import { PersonModel } from '../../models/person.model.ts';
+import { ValidationBodyException } from '../../../utils/validate.utils.ts';
+import { ControllerAbstract } from '../abstract/controller.ts';
 
 @Controller('/person')
-export class PersonController {
+export class PersonController extends ControllerAbstract {
 
-  constructor(private service: PersonService){};
+  constructor(private service: PersonService){
+    super();
+  };
 
   @Get('/:id')
   public async getPerson(@Param('id') id: string) {
@@ -20,7 +24,21 @@ export class PersonController {
   @Post('/')
   public async createPerson(@Body() body) {
     let person = new PersonModel(body);
-    return await this.service.createPerson(person);
+    try {
+      return await this.service.createPerson(person);
+    } catch (error) {
+      let response: Object;
+
+      if(error instanceof ValidationBodyException) {
+        response = this.handleBodyValidationError(person, error);
+      } else {
+        response = {
+          result: 'error'
+        }
+      }
+      
+      return response;
+    }
   }
 
   @Put('/:id')

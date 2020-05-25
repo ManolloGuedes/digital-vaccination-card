@@ -1,6 +1,7 @@
 import { db, ObjectId } from '../config/mongo.db.ts';
 import { Injectable } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { PersonModel } from '../models/person.model.ts';
+import { ValidationBodyException } from "../../utils/validate.utils.ts";
 
 @Injectable()
 export class PersonService {
@@ -16,7 +17,11 @@ export class PersonService {
   }
 
   async createPerson(person: PersonModel) {
-    return await this.collection.insertOne(person);
+    try {
+      return await this.validateAndExecuteQuery(person, () => this.collection.insertOne(person))
+    } catch (error) {
+      throw error;
+    }
   }
 
   private async updatePerson(person: PersonModel) {
@@ -35,13 +40,19 @@ export class PersonService {
     try {
       let result = await this.updatePerson(person);
 
-      console.log(result);
-
       if(result.modifiedCount == 1) {
         return await this.getPerson(person._id);
       }
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  private async validateAndExecuteQuery(person: PersonModel, query): Promise<Object> {
+    if(person.validate()) {
+      return query();
+    } else {
+      throw new ValidationBodyException();
     }
   }
 }
