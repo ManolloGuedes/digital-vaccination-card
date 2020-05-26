@@ -7,8 +7,17 @@ class ValidationBodyException extends Error {
   }
 }
 
+class DocumentDoesnotExist extends Error {
+  constructor(id: String, message?: string) {
+    if(!message) {
+      message = `Informed id (${id}) does not exist. Make sure you are using the correct id.`;
+    }
+    super(message);
+  }
+}
+
 const isEmail = (email: string) => {
   return /\S+@\S+\.\S+/.test(email);
 }
 
-export { isEmail, ValidationBodyException };
+export { isEmail, ValidationBodyException, DocumentDoesnotExist };

@@ -3,6 +3,7 @@ import { PersonService } from '../../services/person.service.ts';
 import { PersonModel } from '../../models/person.model.ts';
 import { ValidationBodyException } from '../../../utils/validate.utils.ts';
 import { ControllerAbstract } from '../abstract/controller.ts';
+import { VaccineRecordModel } from '../../models/vaccine-record.model.ts';
 
 @Controller('/person')
 export class PersonController extends ControllerAbstract {
@@ -46,5 +47,21 @@ export class PersonController extends ControllerAbstract {
     } catch (error) {
       return this.handleError(error, person);
     }
+  }
+
+  @Post('/:id/vaccine')
+  public async insertVaccine(@Body() body, @Param('id') personId: string) {
+    let vaccineRecord = new VaccineRecordModel(body);
+
+    try {
+      return await this.service.insertVaccine(vaccineRecord, personId);
+    } catch (error) {
+      return this.handleError(error, vaccineRecord);
+    }
+  }
+
+  @Get('/:id/vaccine')
+  public async getVaccines(@Body() body, @Param('id') personId: string) {
+    //TODO get vaccines got by person who has _id = id
   }
 }

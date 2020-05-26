@@ -1,24 +1,25 @@
 import { MongoSchema } from './abstracts/mongo.schema.ts';
+import { ObjectId } from '../config/mongo.db.ts';
 
 export class VaccineRecordModel  extends MongoSchema {
-  _id: string;
-  vaccineId: string;
-  date: Date;
-  nextVaccineDate: Date;
+  _id: ObjectId | undefined;
+  vaccineId: ObjectId | undefined;
+  date: Date | undefined;
+  nextVaccineDate: Date | undefined;
 
   constructor({ id, vaccineId, date, nextVaccineDate }) {
     super();
-    this._id = id;
-    this.vaccineId = id;
-    this.date = date;
-    this.nextVaccineDate = date;
+    this._id = id ? ObjectId(id) : undefined;
+    this.vaccineId = vaccineId ? ObjectId(vaccineId) : undefined;
+    this.date = date ? new Date(date) : undefined;
+    this.nextVaccineDate = nextVaccineDate ? new Date(nextVaccineDate) : undefined;
   }
 
   validate(): Boolean {
     if(super.validate()) {
-      return this.vaccineId?.length > 0 &&
-      this.date?.getTime() < new Date().getTime() &&
-      (!this.date || this.date.getTime() > new Date().getTime());
+      return !!this.vaccineId &&
+      (!this.date || this.date.getTime() < new Date().getTime()) &&
+      (!this.nextVaccineDate || this.nextVaccineDate.getTime() > new Date().getTime());
     }
     return false;
   }
