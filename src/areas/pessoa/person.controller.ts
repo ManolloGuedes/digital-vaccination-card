@@ -51,7 +51,17 @@ export class PersonController extends ControllerAbstract {
 
   @Delete('/:id')
   public async deletePerson(@Param('id') personId) {
-    //TODO
+    try {
+      let removed = await this.service.removePerson(personId);
+      if(removed) {
+        return this.mountReturn('success', 204);
+      } else {
+        return this.handleError(new GenericError('It was not possible to do the remotion, please contact the support.'));
+      }
+    } catch (error) {
+      console.log(error)
+      return this.handleError(error);
+    }
   }
 
   @Get('/:id/vaccine')

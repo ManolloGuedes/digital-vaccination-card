@@ -123,4 +123,25 @@ export class PersonService {
       throw new DocumentDoesnotExist(personId);
     }
   }
+
+  async removePerson(personId: string) {
+    try {
+      let result = await this.collection.updateOne({
+        _id: ObjectId(personId)
+      }, {
+       $set: {
+         deleted: true
+       }
+      });
+
+      if(result['matchedCount'] > 0) {
+        return true;
+      } else {
+        throw new DocumentDoesnotExist(personId);
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
