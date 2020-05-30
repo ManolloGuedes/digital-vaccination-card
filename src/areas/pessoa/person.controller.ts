@@ -59,7 +59,7 @@ export class PersonController extends ControllerAbstract {
         return this.handleError(new GenericError('It was not possible to do the remotion, please contact the support.'));
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return this.handleError(error);
     }
   }
@@ -94,7 +94,7 @@ export class PersonController extends ControllerAbstract {
         return this.handleError(new GenericError('It was not possible to do the remotion, please contact the support.'));
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return this.handleError(error);
     }
   }
