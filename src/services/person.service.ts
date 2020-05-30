@@ -63,10 +63,10 @@ export class PersonService {
   async insertVaccine(vaccineRecord: VaccineRecordModel, personId: string): Promise<PersonModel | undefined> {
     try {
       if(vaccineRecord.validate()) {
-        let result = this.collection.updateOne({
+        let result = await this.collection.updateOne({
           _id: ObjectId(personId)
         }, {
-          $set: {
+          $push: {
             vaccines: vaccineRecord
           }
         });
