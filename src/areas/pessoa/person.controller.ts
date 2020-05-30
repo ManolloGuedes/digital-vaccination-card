@@ -3,6 +3,7 @@ import { PersonService } from '../../services/person.service.ts';
 import { PersonModel } from '../../models/person.model.ts';
 import { ControllerAbstract } from '../abstract/controller.ts';
 import { VaccineRecordModel } from '../../models/vaccine-record.model.ts';
+import { GenericError } from '../../../utils/validate.utils.ts';
 
 @Controller('/person')
 export class PersonController extends ControllerAbstract {
@@ -11,14 +12,14 @@ export class PersonController extends ControllerAbstract {
     super();
   };
 
-  @Get('/:id')
-  public async getPerson(@Param('id') id: string) {
-    return this.mountReturn(await this.service.getPerson(id));
-  }
-
   @Get('/')
   public async getPeople() {
     return this.mountReturn(await this.service.getPeople());
+  }
+
+  @Get('/:id')
+  public async getPerson(@Param('id') id: string) {
+    return this.mountReturn(await this.service.getPerson(id));
   }
 
   @Post('/')
@@ -48,9 +49,18 @@ export class PersonController extends ControllerAbstract {
     }
   }
 
+  @Delete('/:id')
+  public async deletePerson(@Param('id') personId) {
+    //TODO
+  }
+
   @Get('/:id/vaccine')
   public async getVaccines(@Param('id') personId: string) {
-    //TODO get vaccines from a person
+    try {
+      return this.mountReturn(await this.service.getVaccinesFromPerson(personId));
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
   @Post('/:id/vaccine')
@@ -71,7 +81,7 @@ export class PersonController extends ControllerAbstract {
       if(removed) {
         return this.mountReturn('success', 204);
       } else {
-        return this.handleError(new Error('It was not possible to do the remotion, please contact the support.'));
+        return this.handleError(new GenericError('It was not possible to do the remotion, please contact the support.'));
       }
     } catch (error) {
       console.log(error)

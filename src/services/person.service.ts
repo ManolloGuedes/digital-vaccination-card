@@ -15,7 +15,11 @@ export class PersonService {
   }
 
   async getPerson(id: string): Promise<PersonModel> {
-    return await this.collection.findOne({ _id: ObjectId(id) });
+    try {
+      return await this.collection.findOne({ _id: ObjectId(id) });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async createPerson(person: PersonModel) {
@@ -105,6 +109,18 @@ export class PersonService {
     } catch (error) {
       console.error(error);
       throw error;
+    }
+  }
+
+  async getVaccinesFromPerson(personId: string) {
+    let person = await this.getPerson(personId);
+
+    if(person) {
+      let vaccines = person.vaccines;
+
+      return vaccines;
+    } else {
+      throw new DocumentDoesnotExist(personId);
     }
   }
 }

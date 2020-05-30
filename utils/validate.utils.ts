@@ -16,8 +16,14 @@ class DocumentDoesnotExist extends Error {
   }
 }
 
+class GenericError extends Error {
+  constructor(message?: string) {
+    super(message);
+  }
+}
+
 const isEmail = (email: string) => {
   return /\S+@\S+\.\S+/.test(email);
 }
 
-export { isEmail, ValidationBodyException, DocumentDoesnotExist };
+export { isEmail, ValidationBodyException, DocumentDoesnotExist, GenericError };
