@@ -1,8 +1,9 @@
-import { db, ObjectId } from '../config/mongo.db.ts';
+import { db } from '../config/mongo.db.ts';
 import { Injectable } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { PersonModel } from '../models/person.model.ts';
 import { ValidationBodyException, DocumentDoesnotExist } from "../../utils/validate.utils.ts";
 import { VaccineRecordModel } from '../models/vaccine-record.model.ts';
+import { ObjectId } from 'https://deno.land/x/mongo@v0.7.0/mod.ts';
 
 @Injectable()
 export class PersonService {
@@ -77,6 +78,29 @@ export class PersonService {
         }
       } else {
         throw new ValidationBodyException();
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async removeVaccine(idVaccine: string, idRecord: string, personId: string) {
+    try {
+      let result = await this.collection.updateOne({
+        _id: ObjectId(personId)
+      }, {
+        $pull: {
+          vaccines: {
+            vaccineId: ObjectId(idVaccine)
+          }
+        }
+      });
+
+      if(result['matchedCount'] > 0) {
+        return await this.getPerson(personId);
+      } else {
+        throw new DocumentDoesnotExist(personId);
       }
     } catch (error) {
       console.error(error);

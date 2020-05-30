@@ -19,10 +19,10 @@ export class ControllerAbstract {
     return response;
   }
 
-  protected handleError(error: any, element: Validable) {
+  protected handleError(error: any, element?: Validable) {
     let response: Object;
 
-    if (error instanceof ValidationBodyException) {
+    if (error instanceof ValidationBodyException && element) {
       response = this.handleBodyValidationError(element, error);
     }
     else {

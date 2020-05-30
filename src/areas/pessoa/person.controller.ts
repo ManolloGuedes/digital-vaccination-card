@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put } from 'https://deno.land/x/alosaur/src/mod.ts';
+import { Controller, Get, Param, Post, Body, Put, Delete } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { PersonService } from '../../services/person.service.ts';
 import { PersonModel } from '../../models/person.model.ts';
 import { ValidationBodyException } from '../../../utils/validate.utils.ts';
@@ -60,8 +60,13 @@ export class PersonController extends ControllerAbstract {
     }
   }
 
-  @Get('/:id/vaccine')
-  public async getVaccines(@Body() body, @Param('id') personId: string) {
-    //TODO get vaccines got by person who has _id = id
+  @Delete('/:id/vaccine')
+  public async removeVaccine(@Body() { idVaccine, idRecord }, @Param('id') personId: string) {
+    try {
+      return await this.service.removeVaccine(idVaccine, idRecord, personId);
+    } catch (error) {
+      console.log(error)
+      return this.handleError(error);
+    }
   }
 }
