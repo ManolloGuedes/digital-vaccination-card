@@ -37,7 +37,6 @@ export class PersonService {
         name: person.name,
         birthday: person.birthday,
         email: person.email,
-        vaccines: person.vaccines,
         updated_at: new Date()
       }
     });
