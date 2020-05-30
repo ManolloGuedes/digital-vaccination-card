@@ -14,19 +14,19 @@ export class PersonController extends ControllerAbstract {
 
   @Get('/:id')
   public async getPerson(@Param('id') id: string) {
-    return await this.service.getPerson(id);
+    return this.mountReturn(await this.service.getPerson(id));
   }
 
   @Get('/')
   public async getPeople() {
-    return await this.service.getPeople();
+    return this.mountReturn(await this.service.getPeople());
   }
 
   @Post('/')
   public async createPerson(@Body() body) {
     let person = new PersonModel(body);
     try {
-      return await this.service.createPerson(person);
+      return this.mountReturn(await this.service.createPerson(person));
     } catch (error) {
       return this.handleError(error, person);
     }
@@ -41,9 +41,9 @@ export class PersonController extends ControllerAbstract {
       let personResult: PersonModel | undefined = await this.service.updatePersonAndGetResult(person);
 
       if(personResult) {
-        return personResult
+        return this.mountReturn(personResult);
       }
-      return {result: 'error', msg: `There is no recorded person to id: ${id}`}
+      return this.mountReturn({msg: `There is no recorded person to id: ${id}`}, 500);
     } catch (error) {
       return this.handleError(error, person);
     }
@@ -54,7 +54,7 @@ export class PersonController extends ControllerAbstract {
     let vaccineRecord = new VaccineRecordModel(body);
 
     try {
-      return await this.service.insertVaccine(vaccineRecord, personId);
+      return this.mountReturn(await this.service.insertVaccine(vaccineRecord, personId));
     } catch (error) {
       return this.handleError(error, vaccineRecord);
     }
@@ -63,7 +63,7 @@ export class PersonController extends ControllerAbstract {
   @Delete('/:id/vaccine')
   public async removeVaccine(@Body() { idVaccine, idRecord }, @Param('id') personId: string) {
     try {
-      return await this.service.removeVaccine(idVaccine, idRecord, personId);
+      return this.mountReturn(await this.service.removeVaccine(idVaccine, idRecord, personId));
     } catch (error) {
       console.log(error)
       return this.handleError(error);

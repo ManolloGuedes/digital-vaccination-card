@@ -12,19 +12,19 @@ export class VaccineController extends ControllerAbstract{
 
   @Get('/')
   public async getVaccines() {
-    return this.service.getVaccines();
+    return this.mountReturn(await this.service.getVaccines());
   }
 
   @Get('/:id')
   public async getVaccine(@Param('id') id: string) {
-    return this.service.getVaccine(id);
+    return this.mountReturn(await this.service.getVaccine(id));
   }
 
   @Post('/')
   public async createVaccine(@Body() body) {
     let vaccine = new VaccineModel(body);
     try {
-      return await this.service.createVaccine(vaccine);
+      return this.mountReturn(await this.service.createVaccine(vaccine));
     } catch (error) {
       return this.handleError(error, vaccine);
     }
@@ -35,12 +35,12 @@ export class VaccineController extends ControllerAbstract{
     let vaccine = new VaccineModel({...body, id});
     
     try {
-      let vaccineResult: VaccineModel | undefined = await this.service.updateVaccineAndGetResult(vaccine);
+      let vaccineResult: VaccineModel = await this.service.updateVaccineAndGetResult(vaccine);
 
       if(vaccineResult) {
-        return vaccineResult;
+        return this.mountReturn(vaccineResult);
       }
-      return {result: 'error', msg: `There is no recorded vaccine to id: ${id}`}
+      return this.mountReturn({msg: `There is no recorded vaccine to id: ${id}`}, 500)
     } catch (error) {
       return this.handleError(error, vaccine);
     }

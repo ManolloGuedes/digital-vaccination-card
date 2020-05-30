@@ -1,7 +1,7 @@
 import { Injectable } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { db, Collection, ObjectId } from '../config/mongo.db.ts';
 import { VaccineModel } from '../models/vaccine.model.ts';
-import { ValidationBodyException } from '../../utils/validate.utils.ts';
+import { ValidationBodyException, DocumentDoesnotExist } from '../../utils/validate.utils.ts';
 
 @Injectable()
 export class VaccineService {
@@ -33,12 +33,14 @@ export class VaccineService {
     });
   }
 
-  async updateVaccineAndGetResult(vaccine: VaccineModel): Promise<VaccineModel | undefined> {
+  async updateVaccineAndGetResult(vaccine: VaccineModel): Promise<VaccineModel> {
     try {
       let result = await this.validateAndExecuteQuery(vaccine, () => this.updateVaccine(vaccine));
 
       if(result['modifiedCount'] == 1) {
         return await this.getVaccine(vaccine._id);
+      } else {
+        throw new DocumentDoesnotExist(vaccine._id);
       }
     } catch (error) {
       console.error(error);

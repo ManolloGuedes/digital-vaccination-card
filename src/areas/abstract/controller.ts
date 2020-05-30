@@ -1,5 +1,6 @@
 import { Validable } from "../../models/interfaces/validable.ts";
 import { ValidationBodyException } from "../../../utils/validate.utils.ts";
+import { Content } from 'https://deno.land/x/alosaur/src/mod.ts';
 
 export class ControllerAbstract {
   protected handleBodyValidationError(element: Validable, error: Error): Object {
@@ -7,16 +8,15 @@ export class ControllerAbstract {
 
     if(error instanceof ValidationBodyException) {
       response = {
-        result: 'error',
         message: error.message,
         valid_structure: element.getAcceptableStructure()
       }
     } else {
       response = {
-        result: 'error'
+        message: 'Sorry, there is something wrong. Please, try again.'
       }
     }
-    return response;
+    return this.mountReturn(response, 500);
   }
 
   protected handleError(error: any, element?: Validable) {
@@ -27,11 +27,14 @@ export class ControllerAbstract {
     }
     else {
       response = {
-        result: 'error',
         message: error.message
       };
     }
 
-    return response;
+    return this.mountReturn(response, 500);
+  }
+
+  protected mountReturn(result: Object, status: number = 202) {
+    return Content({result: result}, status);
   }
 }

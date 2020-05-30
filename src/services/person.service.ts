@@ -60,7 +60,7 @@ export class PersonService {
     }
   }
 
-  async insertVaccine(vaccineRecord: VaccineRecordModel, personId: string): Promise<PersonModel | undefined> {
+  async insertVaccine(vaccineRecord: VaccineRecordModel, personId: string): Promise<PersonModel> {
     try {
       if(vaccineRecord.validate()) {
         let result = await this.collection.updateOne({
