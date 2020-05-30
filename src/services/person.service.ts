@@ -88,14 +88,14 @@ export class PersonService {
     }
   }
 
-  async removeVaccine(idVaccine: string, idRecord: string, personId: string) {
+  async removeVaccine(vaccineId: string, idRecord: string, personId: string) {
     try {
       let result = await this.collection.updateOne({
         _id: ObjectId(personId)
       }, {
         $pull: {
           vaccines: {
-            vaccineId: ObjectId(idVaccine)
+            vaccineId: ObjectId(vaccineId)
           }
         }
       });

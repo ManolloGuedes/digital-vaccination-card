@@ -85,9 +85,9 @@ export class PersonController extends ControllerAbstract {
   }
 
   @Delete('/:id/vaccine')
-  public async removeVaccine(@Body() { idVaccine, idRecord }, @Param('id') personId: string) {
+  public async removeVaccine(@Body() { vaccineId, idRecord }, @Param('id') personId: string) {
     try {
-      let removed = await this.service.removeVaccine(idVaccine, idRecord, personId);
+      let removed = await this.service.removeVaccine(vaccineId, idRecord, personId);
       if(removed) {
         return this.mountReturn('success', 204);
       } else {
