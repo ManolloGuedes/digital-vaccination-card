@@ -3,7 +3,7 @@ import { PersonService } from '../../services/person.service.ts';
 import { PersonModel } from '../../models/person.model.ts';
 import { ControllerAbstract } from '../abstract/controller.ts';
 import { VaccineRecordModel } from '../../models/vaccine-record.model.ts';
-import { GenericError } from '../../../utils/validate.utils.ts';
+import { GenericError } from '../../../utils/exceptions.utils.ts';
 
 @Controller('/person')
 export class PersonController extends ControllerAbstract {

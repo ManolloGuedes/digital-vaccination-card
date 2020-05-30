@@ -1,7 +1,7 @@
 import { db } from '../config/mongo.db.ts';
 import { Injectable } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { PersonModel } from '../models/person.model.ts';
-import { ValidationBodyException, DocumentDoesnotExist } from "../../utils/validate.utils.ts";
+import { ValidationBodyException, DocumentDoesnotExist } from "../../utils/exceptions.utils.ts";
 import { VaccineRecordModel } from '../models/vaccine-record.model.ts';
 import { ObjectId } from 'https://deno.land/x/mongo@v0.7.0/mod.ts';
 

@@ -1,5 +1,5 @@
 import { Validable } from "../../models/interfaces/validable.ts";
-import { ValidationBodyException, DocumentDoesnotExist } from "../../../utils/validate.utils.ts";
+import { ValidationBodyException, DocumentDoesnotExist } from "../../../utils/exceptions.utils.ts";
 import { Content } from 'https://deno.land/x/alosaur/src/mod.ts';
 
 export class ControllerAbstract {
