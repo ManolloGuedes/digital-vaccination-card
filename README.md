@@ -31,3 +31,70 @@ Permissions used in this project:
 - allow-plugin: allow loading plugins
 - allow-env: allow environment access
 - unstable: enable unstable APIs
+
+## Endpoint Router
+#### Vaccines
+````
+get: /vaccine
+    - Get all recorded vaccines
+
+get: /vaccine/:id
+    - Get a specific vaccine
+
+post: /vaccine
+    - body: {
+      name: vaccine's name
+    }
+    - create a vaccine record
+
+put: /vaccine/:id
+    - body: {
+      name: new vaccine's name
+    }
+    - change the vaccine's name
+````
+
+#### Person
+````
+get: /person
+    - Get all recorded people
+
+get: /person/:id
+    - Get a specific person
+
+post: /person/
+    - body: {
+      name: Person's name,
+      email?: person's email,
+      birthday: 'mm/dd/yyyy'
+    }
+    - create a person record
+
+put: /person/:id
+    - body: {
+      name: Person's name,
+      email?: person's email,
+      birthday: 'mm/dd/yyyy'
+    }
+    - update a person record
+
+delete: /person/:id
+    - Delete a person record
+
+get: /person/:id/vaccine
+    - Get a person's vaccines
+
+post: /person/:id/vaccine
+    -body: {
+      vaccineId: vaccine's id (same returned from post /vaccine),
+      date: 'mm/dd/yyyy',
+      nextVaccineDate?: 'mm/dd/yyyy'
+    }
+    - insert a vaccine into a person's record
+
+delete: /person/:id/vaccine
+    -body: {
+      vaccineId: vaccine's id to be deleted
+    }
+    - delete a vaccine from a person's record
+````
