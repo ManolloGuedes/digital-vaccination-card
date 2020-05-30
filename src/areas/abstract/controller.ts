@@ -1,5 +1,5 @@
 import { Validable } from "../../models/interfaces/validable.ts";
-import { ValidationBodyException } from "../../../utils/validate.utils.ts";
+import { ValidationBodyException, DocumentDoesnotExist } from "../../../utils/validate.utils.ts";
 import { Content } from 'https://deno.land/x/alosaur/src/mod.ts';
 
 export class ControllerAbstract {
@@ -16,25 +16,31 @@ export class ControllerAbstract {
         message: 'Sorry, there is something wrong. Please, try again.'
       }
     }
-    return this.mountReturn(response, 500);
+    return this.mountReturn(response, 400);
   }
 
   protected handleError(error: any, element?: Validable) {
     let response: Object;
+    let status = 500;
 
     if (error instanceof ValidationBodyException && element) {
       response = this.handleBodyValidationError(element, error);
-    }
-    else {
+      status = 400;
+    } else if (error instanceof DocumentDoesnotExist) {
+      response = {
+        message: error.message
+      }
+      status = 404;
+    } else {
       response = {
         message: error.message
       };
     }
 
-    return this.mountReturn(response, 500);
+    return this.mountReturn(response, status);
   }
 
-  protected mountReturn(result: Object, status: number = 202) {
+  protected mountReturn(result: Object = 'success', status: number = 202) {
     return Content({result: result}, status);
   }
 }

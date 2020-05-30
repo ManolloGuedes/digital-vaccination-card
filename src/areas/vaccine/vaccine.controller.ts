@@ -24,7 +24,7 @@ export class VaccineController extends ControllerAbstract{
   public async createVaccine(@Body() body) {
     let vaccine = new VaccineModel(body);
     try {
-      return this.mountReturn(await this.service.createVaccine(vaccine));
+      return this.mountReturn(await this.service.createVaccine(vaccine), 201);
     } catch (error) {
       return this.handleError(error, vaccine);
     }
@@ -38,9 +38,9 @@ export class VaccineController extends ControllerAbstract{
       let vaccineResult: VaccineModel = await this.service.updateVaccineAndGetResult(vaccine);
 
       if(vaccineResult) {
-        return this.mountReturn(vaccineResult);
+        return this.mountReturn(vaccineResult, 200);
       }
-      return this.mountReturn({msg: `There is no recorded vaccine to id: ${id}`}, 500)
+      return this.mountReturn({msg: `There is no recorded vaccine to id: ${id}`}, 401)
     } catch (error) {
       return this.handleError(error, vaccine);
     }

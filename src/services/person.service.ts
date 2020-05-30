@@ -98,7 +98,7 @@ export class PersonService {
       });
 
       if(result['matchedCount'] > 0) {
-        return await this.getPerson(personId);
+        return true;
       } else {
         throw new DocumentDoesnotExist(personId);
       }

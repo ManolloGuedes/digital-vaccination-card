@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Post, Body, Put, Delete } from 'https://deno.land/x/alosaur/src/mod.ts';
 import { PersonService } from '../../services/person.service.ts';
 import { PersonModel } from '../../models/person.model.ts';
-import { ValidationBodyException } from '../../../utils/validate.utils.ts';
 import { ControllerAbstract } from '../abstract/controller.ts';
 import { VaccineRecordModel } from '../../models/vaccine-record.model.ts';
 
@@ -26,7 +25,7 @@ export class PersonController extends ControllerAbstract {
   public async createPerson(@Body() body) {
     let person = new PersonModel(body);
     try {
-      return this.mountReturn(await this.service.createPerson(person));
+      return this.mountReturn(await this.service.createPerson(person), 201);
     } catch (error) {
       return this.handleError(error, person);
     }
@@ -41,12 +40,17 @@ export class PersonController extends ControllerAbstract {
       let personResult: PersonModel | undefined = await this.service.updatePersonAndGetResult(person);
 
       if(personResult) {
-        return this.mountReturn(personResult);
+        return this.mountReturn(personResult, 200);
       }
-      return this.mountReturn({msg: `There is no recorded person to id: ${id}`}, 500);
+      return this.mountReturn({msg: `There is no recorded person to id: ${id}`}, 401);
     } catch (error) {
       return this.handleError(error, person);
     }
+  }
+
+  @Get('/:id/vaccine')
+  public async getVaccines(@Param('id') personId: string) {
+    //TODO get vaccines from a person
   }
 
   @Post('/:id/vaccine')
@@ -54,7 +58,7 @@ export class PersonController extends ControllerAbstract {
     let vaccineRecord = new VaccineRecordModel(body);
 
     try {
-      return this.mountReturn(await this.service.insertVaccine(vaccineRecord, personId));
+      return this.mountReturn(await this.service.insertVaccine(vaccineRecord, personId), 201);
     } catch (error) {
       return this.handleError(error, vaccineRecord);
     }
@@ -63,7 +67,12 @@ export class PersonController extends ControllerAbstract {
   @Delete('/:id/vaccine')
   public async removeVaccine(@Body() { idVaccine, idRecord }, @Param('id') personId: string) {
     try {
-      return this.mountReturn(await this.service.removeVaccine(idVaccine, idRecord, personId));
+      let removed = await this.service.removeVaccine(idVaccine, idRecord, personId);
+      if(removed) {
+        return this.mountReturn('success', 204);
+      } else {
+        return this.handleError(new Error('It was not possible to do the remotion, please contact the support.'));
+      }
     } catch (error) {
       console.log(error)
       return this.handleError(error);
